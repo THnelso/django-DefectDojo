@@ -63,6 +63,11 @@ class OpenVASXMLParser:
 
                     if cve_list:
                         description.append(f"**CVEs**: {', '.join(cve_list)}")
+                    
+                    # capture solution attribute and type
+                    solution = field.find('solution').attrib['type']
+                    solution_text  = field.find('solution').text
+                    mitigation_text = solution + '\n\n' + solution_text
 
                 if field.tag == "severity":
                     description.append(f"**Severity**: {field.text}")
@@ -87,6 +92,7 @@ class OpenVASXMLParser:
                 epss_score=epss_score,
                 epss_percentile=epss_percentile,
                 cve=cve,
+                mitigation=mitigation_text
             )
             finding.unsaved_endpoints = [unsaved_endpoint]
             findings.append(finding)
